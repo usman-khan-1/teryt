@@ -27,7 +27,11 @@ module Teryt
     end
 
     def pobierz_liste_powiatow(woj: "", data_stanu: Date.today)
-      savon_client.call(:pobierz_liste_powiatow, message: { "tns:DataStanu" => data_stanu })
+      savon_client
+        .call(:pobierz_liste_powiatow, message: { "tns:Woj" => woj, "tns:DataStanu" => data_stanu })
+        .to_hash
+        .dig(:pobierz_liste_powiatow_response, :pobierz_liste_powiatow_result, :jednostka_terytorialna)
+        .map { |attrs| JednostkaTerytorialna.new(**attrs) }
     end
   end
 end
