@@ -4,6 +4,7 @@ require "savon"
 require_relative "teryt/version"
 require_relative "teryt/client"
 require_relative "teryt/jednostka_terytorialna"
+require_relative "teryt/miejscowosc"
 
 module Teryt
   WSDL = "https://uslugaterytws1.stat.gov.pl/wsdl/terytws1.wsdl"
