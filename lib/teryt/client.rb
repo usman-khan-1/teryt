@@ -1,3 +1,5 @@
+require 'zip'
+
 module Teryt
   class Client
     attr_reader :savon_client
@@ -61,6 +63,15 @@ module Teryt
         .dig(:pobierz_liste_miejscowosci_w_rodzaju_gminy_response, :pobierz_liste_miejscowosci_w_rodzaju_gminy_result, :miejscowosc)
         .then { |result| Array.wrap(result) }
         .map { |attrs| Miejscowosc.new(**attrs) }
+    end
+
+    def pobierz_zmiany_ulic_urzedowy(stanod:, stando: Date.today)
+      savon_client
+        .call(:pobierz_zmiany_ulic_urzedowy, message: { "tns:stanod" => stanod, "tns:stando" => stando })
+        .to_hash
+        .dig(:pobierz_zmiany_ulic_urzedowy_response, :pobierz_zmiany_ulic_urzedowy_result, :plik_zawartosc)
+        .then { |file_content| StringIO.new(Base64.decode64(file_content)) }
+        .then { |io| Zip::InputStream.new(io).get_next_entry.get_input_stream.read }
     end
   end
 end
