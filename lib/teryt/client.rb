@@ -71,7 +71,7 @@ module Teryt
         .to_hash
         .dig(:pobierz_zmiany_ulic_urzedowy_response, :pobierz_zmiany_ulic_urzedowy_result, :plik_zawartosc)
         .then { |file_content| StringIO.new(Base64.decode64(file_content)) }
-        .then { |io| Zip::InputStream.new(io).get_next_entry.get_input_stream.read }
+        .then { |io| Zip::InputStream.new(io).get_next_entry.get_input_stream.read.force_encoding("UTF-8") }
     end
   end
 end
